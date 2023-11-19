@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.simple-image input {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  font-size: 14px;
+}
