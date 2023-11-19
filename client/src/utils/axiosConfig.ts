@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const Axios = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.AXIOS_BASE_URL,
 })
 
 export default Axios
