@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EditorJS from '@editorjs/editorjs'
 // import header quote nested-list for editorjs
 import Header from '@editorjs/header'
@@ -9,10 +10,15 @@ import Paragraph from '@editorjs/paragraph'
 import Table from '@editorjs/table'
 // import Marker from '@editorjs/marker'
 
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef, forwardRef} from 'react'
 import {SimpleImage} from './blockClasses'
+import {iEditorData} from '../../types/interfaces'
 
-const EditorArea = () => {
+type Props = {
+  storeEditorData: (data: iEditorData) => void
+}
+
+const EditorArea = forwardRef<any, Props>((Props, ref) => {
   // create the editor
   const create = useRef(true)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,8 +44,26 @@ const EditorArea = () => {
     create.current = false
   }, [create])
 
-  return <div id='editorjs' className='editor-holder w-full   p-5'></div>
-}
+  const saveEditor = () => {
+    editorState.current.save().then((output: iEditorData) => {
+      Props.storeEditorData(output)
+    })
+  }
+
+  return (
+    <>
+      <div id='editorjs' className='w-full p-5 editor-holder'></div>
+      <button
+        ref={ref}
+        onClick={saveEditor}
+        className='hidden'
+        aria-label='save editor message'
+      >
+        save editor
+      </button>
+    </>
+  )
+})
 
 export default EditorArea
 

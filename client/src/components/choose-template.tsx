@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {
   Button,
   ButtonGroup,
@@ -10,12 +8,14 @@ import {
 } from '@nextui-org/react'
 import DownArraySVG from './svg/downArraySVG'
 
-const ChooseTemplate = () => {
-  type iKey = 'default' | 'colourful' | 'formal'
-  const [selectedOption, setSelectedOption] = React.useState<Set<iKey>>(
-    new Set(['default'])
-  )
+// interface
+import {TemplateKey} from '../types/interfaces'
 
+type Props = {
+  selectedOption: Set<TemplateKey>
+  setSelectedOption: (value: Set<TemplateKey>) => void
+}
+const ChooseTemplate = ({selectedOption, setSelectedOption}: Props) => {
   const descriptionsMap = {
     default: 'This uses the default template, for this mail',
     colourful: 'This uses the colourful template, for this mail',
@@ -34,6 +34,7 @@ const ChooseTemplate = () => {
   return (
     <ButtonGroup variant='flat'>
       <Button variant='bordered'>{labelsMap[selectedOptionValue]}</Button>
+
       <Dropdown placement='bottom-end'>
         <DropdownTrigger>
           <Button isIconOnly variant='bordered'>
@@ -42,10 +43,10 @@ const ChooseTemplate = () => {
         </DropdownTrigger>
         <DropdownMenu
           disallowEmptySelection
-          aria-label='Merge options'
+          aria-label='template for the mail'
           selectedKeys={selectedOption}
           selectionMode='single'
-          onSelectionChange={key => setSelectedOption(key as Set<iKey>)}
+          onSelectionChange={key => setSelectedOption(key as Set<TemplateKey>)}
           className='max-w-[300px]'
         >
           <DropdownItem key='default' description={descriptionsMap['default']}>

@@ -14,14 +14,17 @@ import EditSVG from './svg/editSVG'
 import DeleteSVG from './svg/deleteSVG'
 import PopoverWrapper from './wrappers/popover'
 
+// interface
+import {Irecipient, iColumns} from '../types/interfaces'
+
 type Props = {
-  recipients: iRecipient[]
-  setRecipient(recipients: iRecipient): void
+  recipients: Irecipient[]
+  setRecipient(recipients: Irecipient): void
 }
 
 const ConfigRecipients = ({recipients, setRecipient}: Props) => {
   const renderCell = React.useCallback(
-    (recipient: iRecipient, columnKey: string | number) => {
+    (recipient: Irecipient, columnKey: string | number) => {
       //   const cellValue = recipient[columnKey]
 
       switch (columnKey) {
@@ -84,6 +87,7 @@ const ConfigRecipients = ({recipients, setRecipient}: Props) => {
     },
     [setRecipient]
   )
+
   return (
     <Table
       isHeaderSticky
@@ -116,19 +120,6 @@ const ConfigRecipients = ({recipients, setRecipient}: Props) => {
   )
 }
 // 'Name', 'Email', 'Company', 'Role'
-
-type iKey = 'actions' | 'name' | 'role'
-interface iColumns {
-  name: string
-  key: iKey
-}
-
-interface iRecipient {
-  name: string
-  email: string
-  company: string
-  role: string
-}
 
 const columns: iColumns[] = [
   {
