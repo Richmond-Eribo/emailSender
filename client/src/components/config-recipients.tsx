@@ -19,7 +19,7 @@ import {Irecipient, iColumns} from '../types/interfaces'
 
 type Props = {
   recipients: Irecipient[]
-  setRecipient(recipients: Irecipient): void
+  setRecipient(recipients: Irecipient, arg: 'add' | 'remove'): void
 }
 
 const ConfigRecipients = ({recipients, setRecipient}: Props) => {
@@ -50,7 +50,7 @@ const ConfigRecipients = ({recipients, setRecipient}: Props) => {
                   </div>
                   <div className='flex gap-2 mt-2 text-tiny'>
                     <Button
-                      onClick={() => setRecipient(recipient)}
+                      onClick={() => setRecipient(recipient, 'remove')}
                       size='sm'
                       color='danger'
                       className='w-full'

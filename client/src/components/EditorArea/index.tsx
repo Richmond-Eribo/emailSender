@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import EditorJS from '@editorjs/editorjs'
-// import header quote nested-list for editorjs
 import Header from '@editorjs/header'
 import Quote from '@editorjs/quote'
-// import NestedList from '@editorjs/nested-list'
 import List from '@editorjs/list'
-// import Embed from '@editorjs/embed'
 import Paragraph from '@editorjs/paragraph'
 import Table from '@editorjs/table'
+import Image from '@editorjs/image'
+// import header quote nested-list for editorjs
+// import NestedList from '@editorjs/nested-list'
 // import Marker from '@editorjs/marker'
+// import Embed from '@editorjs/embed'
+// import {SimpleImage} from './blockClasses'
 
 import {useEffect, useRef, forwardRef} from 'react'
-import {SimpleImage} from './blockClasses'
 import {iEditorData} from '../../types/interfaces'
 
 type Props = {
@@ -30,9 +31,24 @@ const EditorArea = forwardRef<any, Props>((Props, ref) => {
         holderId: 'editorjs',
         autofocus: true,
         tools: {
-          image: SimpleImage,
-          header: Header,
-          paragraph: Paragraph,
+          image: Image,
+          header: {
+            class: Header,
+            config: {
+              placeholder: 'Enter a header',
+              levels: [1, 2, 3, 4, 5],
+              defaultLevel: 2,
+            },
+            shortcut: 'CMD+SHIFT+H',
+          },
+          paragraph: {
+            class: Paragraph,
+            inlineToolbar: true,
+            config: {
+              placeholder: 'Write something...',
+              hidePlaceholderOnFocus: false,
+            },
+          },
           list: List,
           // marker: Marker,
           // embed: Embed,
@@ -47,12 +63,13 @@ const EditorArea = forwardRef<any, Props>((Props, ref) => {
   const saveEditor = () => {
     editorState.current.save().then((output: iEditorData) => {
       Props.storeEditorData(output)
+      console.log(output)
     })
   }
 
   return (
     <>
-      <div id='editorjs' className='w-full p-5 editor-holder'></div>
+      <div id='editorjs' className='w-full pb-0  p-5 editor-holder'></div>
       <button
         ref={ref}
         onClick={saveEditor}

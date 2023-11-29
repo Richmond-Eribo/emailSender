@@ -16,45 +16,69 @@ import Axios from './utils/axiosConfig'
 import {Irecipient, TemplateKey, iEditorData} from './types/interfaces'
 
 function App() {
-  // handling recipients
   const [recipientState, setRecipientState] = useState<Irecipient[]>([])
+  const [editorData, setEditorData] = useState<iEditorData[]>([])
+  const [selectedTemplate, setSelectedTemplate] = React.useState<
+    Set<TemplateKey>
+  >(new Set(['default']))
 
-  const addRecipient = (newRecipient: Irecipient) => {
-    setRecipientState(prevState => [...prevState, newRecipient])
-  }
+  // handling recipients add and remove function
+  const updateRecipient = (recipient: Irecipient, arg: 'add' | 'remove') => {
+    // check if recipient is in recipientstate
+    const checkIfRecipientExist = recipientState.find(
+      rec => rec.email === recipient.email
+    )
 
-  const removeRecipient = (v: Irecipient) => {
-    setRecipientState(prevState => prevState.filter(rec => rec.name !== v.name))
+    // example of includes on recpientstate
+
+    switch (arg) {
+      case 'add': {
+        if (checkIfRecipientExist) {
+          return false
+        } else {
+          setRecipientState(prev => [...prev, recipient])
+          return true
+        }
+      }
+      case 'remove': {
+        setRecipientState(prevState => [...prevState, recipient])
+        return true
+      }
+    }
   }
 
   // Handling Editor data
-  const [editorData, setEditorData] = useState<iEditorData[]>([])
   // useref gives a typescript error, I have not looked into it
   const saveEditorButton = React.createRef<any>()
-
   const saveEditorFunciton = (EditorJSONData: iEditorData) => {
     setEditorData([EditorJSONData])
   }
 
   // Handling the template for the mail
-  const [selectedTemplate, setSelectedTemplate] = React.useState<
-    Set<TemplateKey>
-  >(new Set(['default']))
-
-  const changeSelectedTemplateFunction = (selectedKeys: Set<TemplateKey>) => {
+  const changeSelectedTemplate = (selectedKeys: Set<TemplateKey>) => {
     setSelectedTemplate(selectedKeys as Set<TemplateKey>)
   }
 
   // uploading message, recipient, and default template to the backend
-  const sendMailToBackendFunction = async () => {
+  const sendMailToBackend = async () => {
     // first of the Editor data needs to be saved. This is handled by a useRef button inside the EditorArea Component
     await saveEditorButton.current!.click()
 
+    // check if recipientstate is empty
+    if (recipientState.length === 0) {
+      alert('you have no email recipient added')
+      return
+    }
+
     // const MailData
-    const mailData = [recipientState, editorData, selectedTemplate]
+    const mailData = {
+      recipient: recipientState,
+      message: editorData,
+      template: selectedTemplate,
+    }
 
     // request to send the data to the backend
-    Axios.post('/singleMail', mailData)
+    Axios.post('/send-mails-to-recipients', mailData)
       .then(response => {
         console.log(response.data)
       })
@@ -69,26 +93,27 @@ function App() {
 
       <p>Send Email panel</p>
 
-      <div className='editor-holder overflow-clip flex flex-col justify-between items-center w-[90%] shadow-lg rounded-xl py-3  min-h-[28rem] border'>
+      <div className='editor-holder overflow-clip flex flex-col justify-between items-center w-[90%] md:w-[80%] lg:w-[60%] shadow-lg rounded-xl py-3 bg-gray-50  min-h-[14rem] border'>
         <div className='w-[95%] rounded-xl border h-10 flex items-center px-3  justify-between'>
           <ModalOverlay
             modalTitle='Add Recipient'
-            modalButtonContent='To: recipient(s)'
-            modalButtonStyle='min-w-[280px] px-0 border-none outline-none text-sm'
+            modalButtonContent='To: Recipient(s)'
+            modalButtonStyle='min-w-[260px] w-full px-0 border-none outline-none text-sm'
             alignText='left'
+            modalContainerStyle='w-full '
           >
-            <ToRecipient addRecipient={addRecipient} />
+            <ToRecipient addRecipient={updateRecipient} />
           </ModalOverlay>
 
           <ModalOverlay
             modalTitle='Configure Recipients'
             isIconOnly
             modalButtonContent={<SettingSVG />}
-            modalButtonStyle='border-none outline-none text-sm'
+            modalButtonStyle='border-none outline-none text-sm flex justify-center'
           >
             <ConfigRecipients
               recipients={recipientState}
-              setRecipient={removeRecipient}
+              setRecipient={updateRecipient}
             />
           </ModalOverlay>
         </div>
@@ -102,11 +127,11 @@ function App() {
         <div className=' flex justify-between items-center  w-[95%]  rounded-lg px-1  h-10'>
           <ChooseTemplate
             selectedOption={selectedTemplate}
-            setSelectedOption={changeSelectedTemplateFunction}
+            setSelectedOption={changeSelectedTemplate}
           />
 
           <Button
-            onClick={sendMailToBackendFunction}
+            onClick={sendMailToBackend}
             color='primary'
             endContent={<SendArrowSVG />}
           >

@@ -41,6 +41,7 @@ interface iVariants {
   children: React.ReactNode
   isIconOnly?: boolean
   alignText?: 'center' | 'left' | 'right'
+  modalContainerStyle?: string
 }
 
 const ModalOverlay = ({
@@ -53,12 +54,13 @@ const ModalOverlay = ({
   modalButtonContent,
   isIconOnly = false,
   alignText = 'center',
+  modalContainerStyle,
 }: iVariants) => {
   const {isOpen, onOpen, onClose} = useDisclosure()
 
   return (
     <>
-      <div className='flex flex-wrap gap-3'>
+      <div className={`flex flex-wrap gap-3 ${modalContainerStyle}`}>
         <Button
           variant={modalButtonVariant}
           isIconOnly={isIconOnly}
