@@ -1,27 +1,29 @@
-# React + TypeScript + Vite
+# Mail Sender - Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of the mail sending provider. it is currently under
+development.
 
-Currently, two official plugins are available:
+## Setting up the project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Open a terminal in the project root.
+2. Navigate to the client folder: `cd client`
+3. Create a .env file in the client folder using the .env.example file as a
+   reference: `cp .env`
+4. Replace `VITE_AXIOS_BASE_URL` in the .env file with the URL of your deployed
+   backend.
 
-## Expanding the ESLint configuration
+## Description of the UI for the mail sender
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The main page is a simple email interface that allows you to send an email to
+one or more recipients. It has the following features:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. To: A text box where you can enter the email addresses of the recipients,
+   separated by commas.
+2. Choose templates: A drop-down menu where you can choose a pre-written email
+   template, `under developmment`
+3. Choose Recipient: shows a pop-up window that allows you to add a recipient to
+   your mailing list. You can enter the name, email, company, and role of the
+   recipient, and then click on the “Add Recipient” button. You can also close
+   the window by clicking on the “Close” button.
+4. Send Mail: A button that will send the email to the recipients using the
+   selected template.
